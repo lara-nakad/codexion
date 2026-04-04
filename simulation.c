@@ -6,7 +6,7 @@
 /*   By: lnakad <lnakad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 12:59:31 by lnakad            #+#    #+#             */
-/*   Updated: 2026/04/01 22:14:29 by lnakad           ###   ########.fr       */
+/*   Updated: 2026/04/02 17:44:23 by lnakad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ static	int	check_valid_table(t_table *table)
 	if (table->nb_coders == 0)
 		return (0);
 	if (table->nb_coders == 1)
-		error_printing("it needs 2 dongles to start compiling");
+	{
+		printf("Single coder needs 2 dongles in order to compile\n");
+		return (0);
+	}
 	return (1);
 }
 

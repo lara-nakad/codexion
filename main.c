@@ -18,11 +18,16 @@ int	main(int argc, char **argv)
 
 	if (argc == 9)
 	{
-		parse_inputs(&table, argc, argv);
-		data_init(&table);
+		if (parse_inputs(&table, argc, argv) == -1)
+			return (-1);
+		if (data_init(&table) == -1)
+			return (-1);
 		simulation_start(&table);
 		cleanup(&table);
 	}
 	else
-		error_printing("Invalid number of arguments!");
+	{
+		printf("Invalid number of arguments!\n");
+		return (-1);
+	}
 }

@@ -48,20 +48,25 @@ static	void	coders_init(t_table *table)
 	}
 }
 
-static	void	allocate_resources(t_table *table)
+static	int	allocate_resources(t_table *table)
 {
 	table->coders = malloc(table->nb_coders * (sizeof(t_coder)));
 	if (!table->coders)
-		error_printing("Allocation failed");
+	{
+		printf("Allocation failed\n");
+		return (-1);
+	}
 	table->dongles = malloc(table->nb_coders * (sizeof(t_dongle)));
 	if (!table->dongles)
 	{
 		free(table->coders);
-		error_printing("ALlocation failed");
+		printf("Allocation failed\n");
+		return (-1);
 	}
+	return (1);
 }
 
-void	data_init(t_table *table)
+int	data_init(t_table *table)
 {
 	int	i;
 
@@ -70,7 +75,8 @@ void	data_init(t_table *table)
 	table->all_threads_ready = 0;
 	table->all_threads_running = 0;
 	table->nb_running_threads = 0;
-	allocate_resources(table);
+	if (allocate_resources(table) == -1)
+		return (-1);
 	pthread_mutex_init(&(table->table_mtx), NULL);
 	pthread_mutex_init(&(table->writing_mtx), NULL);
 	while (i < table->nb_coders)
@@ -84,4 +90,5 @@ void	data_init(t_table *table)
 		i++;
 	}
 	coders_init(table);
+	return (1);
 }

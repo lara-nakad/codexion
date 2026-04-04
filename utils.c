@@ -17,6 +17,16 @@ int	is_space(char c)
 	return ((c >= 9 && c <= 13) || c == 32);
 }
 
+static int	check_digit(char c)
+{
+	if (c < '0' || c > '9')
+	{
+		printf("Should pass numbers only!\n");
+		return (0);
+	}
+	return (1);
+}
+
 int	checking(char *s)
 {
 	int		i;
@@ -27,20 +37,36 @@ int	checking(char *s)
 	while (is_space(s[i]))
 		i++;
 	if (s[i] == '-')
-		error_printing("Should all be positive values");
+	{
+		printf("Should all be positive values!\n");
+		return (-1);
+	}
 	while (s[i])
 	{
-		if (s[i] < '0' || s[i] > '9')
+		if (!check_digit(s[i]))
 			return (-1);
 		if (num > (INT_MAX - (s[i] - '0')) / 10)
-			error_printing("The value is too big, INT_MAX is the limit");
+		{
+			printf("The value is too big, INT_MAX is the limit\n");
+			return (-1);
+		}
 		num = num * 10 + (s[i] - '0');
 		i++;
 	}
 	return (1);
 }
 
-void	parse_inputs(t_table *table, int argc, char **argv)
+static	int	parse_scheduler(char *arg)
+{
+	if (strcmp(arg, "fifo") == 0)
+		return (0);
+	else if (strcmp(arg, "edf") == 0)
+		return (1);
+	else
+		return (-1);
+}
+
+int	parse_inputs(t_table *table, int argc, char **argv)
 {
 	int	i;
 
@@ -48,7 +74,7 @@ void	parse_inputs(t_table *table, int argc, char **argv)
 	while (i < argc - 1)
 	{
 		if (checking(argv[i]) == -1)
-			error_printing("Should be all positive and digits");
+			return (-1);
 		i++;
 	}
 	table->nb_coders = atoi(argv[1]);
@@ -58,10 +84,11 @@ void	parse_inputs(t_table *table, int argc, char **argv)
 	table->time_to_refactor = atoi(argv[5]) * 1e3;
 	table->nb_compiles_required = atoi(argv[6]);
 	table->dongle_cooldown = atoi(argv[7]) * 1e3;
-	if (strcmp(argv[8], "fifo") == 0)
-		table->scheduler_flag = 0;
-	else if (strcmp(argv[8], "edf") == 0)
-		table->scheduler_flag = 1;
-	else
-		error_printing("Should be fifo or edf");
+	table->scheduler_flag = parse_scheduler(argv[8]);
+	if (table->scheduler_flag == -1)
+	{
+		printf("flag should be fifo or edf\n");
+		return (-1);
+	}
+	return (1);
 }

@@ -89,9 +89,8 @@ typedef enum s_coder_status
 	BURNOUT,
 }	t_coder_status;
 
-int		error_printing(char *s);
-void	parse_inputs(t_table *table, int argc, char **argv);
-void	data_init(t_table *table);
+int		parse_inputs(t_table *table, int argc, char **argv);
+int		data_init(t_table *table);
 void	wait_all_threads(t_table *table);
 long	gettime(t_time_code timeCode);
 int		check_simulation_end(t_table *table);
